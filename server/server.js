@@ -1,10 +1,14 @@
 let express = require('express'),
     app = express(),
+    cors = require('cors'),
     mongoose = require('mongoose')
 
 require('dotenv').config()
 
 const PORT = process.env.PORT || 3001
+
+app.use(cors())
+app.use(express.json()) // for parsing application/json
 
 // For deployment
 mongoose.connect(`${process.env.DB_HOST}${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-r2d5l.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`, {
@@ -27,10 +31,8 @@ mongoose.connect(`${process.env.DB_HOST}${process.env.DB_USER}:${process.env.DB_
  })
 
 let grades = require('./routes/gradesRoute')
-let student = require('./routes/studentRoute')
-let teacher = require('./routes/teacherRoute')
+let person = require('./routes/personRoute')
 
 /* These routes are not protected */
 app.use('/Grades', grades)
-app.use('/Student', student)
-app.use('/Teacher', teacher)
+app.use('/Person', person)
