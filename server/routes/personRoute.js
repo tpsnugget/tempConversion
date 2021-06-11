@@ -7,21 +7,41 @@ const express = require('express'),
 router.post('/AddPerson', async (req, res) => {
   try {
     const { student, teacher } = req.body
-    res.status(200).json({"student": student, "teacher": teacher})
-    // /* Get data from MongoDB */
-    // const allUsers = await userModel.find({})
-    // const numUsers = allUsers.length
-    // /* Create an empty array the size needed so no re-allocations will be needed
-    //    at any time as might happen with array.push() */
-    // let reversedUsers = new Array(numUsers)
-    // /* The loop walks backwards from the last index value to the first pulling out that
-    //    array value with the i index and filling the array from the front.
-    //    This is Big O(N) */
-    // for (let i = numUsers - 1; i >= 0; i--) {
-    //   reversedUsers[numUsers - i - 1] = allUsers[i]
-    // }
 
-    // res.status(200).json({"msg": "Success", "allUsers": reversedUsers})
+    let addedStudent = {}
+    let addedTeacher = {}
+
+    /* Student is defined */
+    if(student !== ''){
+      const studentExists = await personModel.find({"name": student})
+
+      /* That student name is not in the database */
+      if(studentExists.length === 0){
+        const newStudent = new personModel
+        newStudent.name = student
+        addedStudent = await newStudent.save()
+      }
+    }
+
+    /* Teacher is defined */
+    if(teacher !== ''){
+      const teacherExists = await personModel.find({"name": teacher})
+
+      /* That teacher name is not in the database */
+      if(teacherExists.length === 0){
+        const newTeacher = new personModel
+        newTeacher.name = teacher
+        newTeacher.personType = 'teacher'
+        addedTeacher = await newTeacher.save()
+      }
+      /* That teacher name does exist in the database */
+      else{
+        addedTeacher = "Teacher exists"
+      }
+    }
+
+    res.status(200).json({"student": addedStudent, "teacher": addedTeacher})
+
   } catch (error) {
       res.status(200).json({"msg": "Error", "err": error})
   }

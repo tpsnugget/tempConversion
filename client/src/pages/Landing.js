@@ -19,6 +19,7 @@ const Landing = () => {
       if(person.teacher !== undefined){ setTeacher(person.teacher) }
    }
 
+   /* Add Student and / or Teacher to the database if they do not already exist */
    useEffect( () => {
       if(student.length > 0 || teacher.length > 0){
          axios.post(node_server + '/Person/AddPerson', {student, teacher})
