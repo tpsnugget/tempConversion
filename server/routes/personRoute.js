@@ -19,7 +19,7 @@ router.post('/AddPerson', async (req, res) => {
       if(studentExists.length === 0){
         const newStudent = new personModel
         newStudent.name = student
-        addedStudent = await newStudent.save()
+        await newStudent.save()
       }
     }
 
@@ -32,18 +32,28 @@ router.post('/AddPerson', async (req, res) => {
         const newTeacher = new personModel
         newTeacher.name = teacher
         newTeacher.personType = 'teacher'
-        addedTeacher = await newTeacher.save()
-      }
-      /* That teacher name does exist in the database */
-      else{
-        addedTeacher = "Teacher exists"
+        await newTeacher.save()
       }
     }
-
-    res.status(200).json({"student": addedStudent, "teacher": addedTeacher})
+    const allPersons = await personModel.find({})
+    const allStudents = allPersons.filter( s => s.personType === 'student' )
+    const allTeachers = allPersons.filter( s => s.personType === 'teacher' )
+    res.status(200).json({"students": allStudents, "teachers": allTeachers})
 
   } catch (error) {
-      res.status(200).json({"msg": "Error", "err": error})
+      res.status(400).json({"msg": "Error in /Person/AddPerson", "err": error})
+  }
+})
+
+/* Route is /Person/GetAllPersons */
+router.get('/GetAllPersons', async (req, res) => {
+  try {
+    const allPersons = await personModel.find({})
+    const allStudents = allPersons.filter( s => s.personType === 'student' )
+    const allTeachers = allPersons.filter( s => s.personType === 'teacher' )
+    res.status(200).json({"students": allStudents, "teachers": allTeachers})
+  } catch (error) {
+    res.status(400).json({"msg": "Error in /Person/GetAllPersons", "err": error})
   }
 })
 

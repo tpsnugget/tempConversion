@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 
     res.status(200).json({"msg": "Success", "allUsers": reversedUsers})
   } catch (error) {
-      res.status(200).json({"msg": "Error", "err": error})
+      res.status(400).json({"msg": "Error", "err": error})
   }
 })
 

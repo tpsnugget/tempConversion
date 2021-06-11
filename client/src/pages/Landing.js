@@ -11,6 +11,8 @@ import Typography from '@material-ui/core/Typography'
 
 const Landing = () => {
 
+   const [ allStudents, setAllStudents ] = useState([])
+   const [ allTeachers, setAllTeachers ] = useState([])
    const [ student, setStudent ] = useState('')
    const [ teacher, setTeacher ] = useState('')
 
@@ -19,12 +21,24 @@ const Landing = () => {
       if(person.teacher !== undefined){ setTeacher(person.teacher) }
    }
 
+   /* Get all Students and Teachers on initial page load */
+   useEffect( () => {
+      axios.get(node_server + '/Person/GetAllPersons')
+         .then( res => {
+            setAllStudents(res.data.students)
+            setAllTeachers(res.data.teachers)
+            console.log('Landing all persons on initial page load are ', res.data)
+         })
+   }, [] )
+
    /* Add Student and / or Teacher to the database if they do not already exist */
    useEffect( () => {
       if(student.length > 0 || teacher.length > 0){
          axios.post(node_server + '/Person/AddPerson', {student, teacher})
          .then( res => {
-            console.log('Landing /Person/AddPerson res.data is ', res.data)
+            setAllStudents(res.data.students)
+            setAllTeachers(res.data.teachers)
+            console.log('Landing all persons on person add are ', res.data)
          })
       }
    }, [student, teacher] )
