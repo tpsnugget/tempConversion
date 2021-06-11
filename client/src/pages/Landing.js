@@ -52,7 +52,7 @@ const Landing = () => {
 
             <AddPerson getPerson={getPerson}/>
 
-            <AddGrade />
+            <AddGrade allStudents={allStudents} allTeachers={allTeachers} />
 
             <Report />
 
