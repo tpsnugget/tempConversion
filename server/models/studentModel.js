@@ -2,35 +2,26 @@ const mongoose = require('mongoose')
 
 /* Define the Student Schema */
 const studentSchema = new mongoose.Schema({
-    teacher: {
+    student: {
       type: String,
       required: true,
+      unique: true
     },
     grades: [
-      {
-         value: {
-            type: Number,
-            required: true
-         },
-         fromTemp: {
-            type: String,
-            required: true
-         },
-         toTemp: {
-            type: String,
-            required: true
-         },
-         correctAnswer: {
-            value: Number,
-            temp: String
-         },
-         answer: String
-      }
-    ],
-    date: {
-      type: Date,
-      default: Date.now
-    }
+       {
+          teacher: String,
+          grade: [
+            {
+               tempToConvert: String,
+               unitToConvertFrom: String,
+               unitToConvertTo: String,
+               studentAnswer: String,
+               correctAnswer: Number,
+               answerCategory: String
+            }
+          ],
+       },
+    ]
 })
 
 module.exports = mongoose.model('student', studentSchema)

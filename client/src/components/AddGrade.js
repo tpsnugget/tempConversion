@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import Button from '@material-ui/core/Button'
 import FormControl from '@material-ui/core/FormControl'
 import Grid from '@material-ui/core/Grid'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
+import { node_server } from '../helpers'
 import PropTypes from 'prop-types'
 import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
@@ -44,10 +46,24 @@ const AddGrade = ({allStudents, allTeachers}) => {
    }
 
    const handleSubmit = () => {
-      setTempToConvert('')
-      setUnitToConvertFrom('')
-      setUnitToConvertTo('')
-      setStudentAnswer('')
+
+      const submission = {
+         student,
+         studentAnswer,
+         teacher,
+         tempToConvert,
+         unitToConvertFrom,
+         unitToConvertTo
+      }
+
+      axios.post(node_server + '/Grades', submission)
+         .then( res => {
+            console.log('AddGrade res.data is ', res.data)
+         } )
+      // setTempToConvert('')
+      // setUnitToConvertFrom('')
+      // setUnitToConvertTo('')
+      // setStudentAnswer('')
    }
 
    const handleTeacherSelect = (e) => {
@@ -108,10 +124,10 @@ const AddGrade = ({allStudents, allTeachers}) => {
                   <InputLabel style={{paddingLeft: '1rem'}}>Unit to Convert FROM</InputLabel>
                   <Select variant='outlined' value={unitToConvertFrom} onChange={handleUnitToConvertFromSelect}>
                      <MenuItem value=''><em>None</em></MenuItem>
-                     <MenuItem value='c'>Celcius</MenuItem>
-                     <MenuItem value='f'>Fahrenheit</MenuItem>
-                     <MenuItem value='k'>Kelvin</MenuItem>
-                     <MenuItem value='r'>Rankine</MenuItem>
+                     {unitToConvertTo === 'c' ? null : <MenuItem value='c'>Celcius</MenuItem>}
+                     {unitToConvertTo === 'f' ? null : <MenuItem value='f'>Fahrenheit</MenuItem>}
+                     {unitToConvertTo === 'k' ? null : <MenuItem value='k'>Kelvin</MenuItem>}
+                     {unitToConvertTo === 'r' ? null : <MenuItem value='r'>Rankine</MenuItem>}
                   </Select>
                </FormControl>
             </Grid>
@@ -120,10 +136,10 @@ const AddGrade = ({allStudents, allTeachers}) => {
                   <InputLabel style={{paddingLeft: '1rem'}}>Unit to Convert TO</InputLabel>
                   <Select variant='outlined' value={unitToConvertTo} onChange={handleUnitToConvertToSelect}>
                      <MenuItem value=''><em>None</em></MenuItem>
-                     <MenuItem value='c'>Celcius</MenuItem>
-                     <MenuItem value='f'>Fahrenheit</MenuItem>
-                     <MenuItem value='k'>Kelvin</MenuItem>
-                     <MenuItem value='r'>Rankine</MenuItem>
+                     {unitToConvertFrom === 'c' ? null : <MenuItem value='c'>Celcius</MenuItem>}
+                     {unitToConvertFrom === 'f' ? null : <MenuItem value='f'>Fahrenheit</MenuItem>}
+                     {unitToConvertFrom === 'k' ? null : <MenuItem value='k'>Kelvin</MenuItem>}
+                     {unitToConvertFrom === 'r' ? null : <MenuItem value='r'>Rankine</MenuItem>}
                   </Select>
                </FormControl>
             </Grid>
