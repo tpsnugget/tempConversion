@@ -11,7 +11,7 @@ import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 
-const AddGrade = ({allStudents, allTeachers}) => {
+const AddGrade = ({allStudents, allTeachers, getStudent, getTeacher}) => {
 
    const [ answerIs, setAnswerIs ] = useState('')
    const [ answerUnit, setAnswerUnit ] = useState('')
@@ -46,6 +46,7 @@ const AddGrade = ({allStudents, allTeachers}) => {
 
    const handleStudentSelect = (e) => {
       setStudent(e.target.value)
+      getStudent(e.target.value)
    }
 
    const handleSubmit = () => {
@@ -61,7 +62,6 @@ const AddGrade = ({allStudents, allTeachers}) => {
 
       axios.post(node_server + '/Grades', submission)
          .then( res => {
-            console.log('AddGrade res.data is ', res.data)
             setAnswerIs(res.data.answerIs)
             setAnswerUnit(res.data.answerUnit)
             setCorrectanswer(res.data.correctAnswer)
@@ -74,6 +74,7 @@ const AddGrade = ({allStudents, allTeachers}) => {
 
    const handleTeacherSelect = (e) => {
       setTeacher(e.target.value)
+      getTeacher(e.target.value)
    }
 
    const handleUnitToConvertFromSelect = (e) => {
@@ -180,7 +181,9 @@ const AddGrade = ({allStudents, allTeachers}) => {
 
 AddGrade.propTypes = {
    allStudents: PropTypes.array,
-   allTeachers: PropTypes.array
+   allTeachers: PropTypes.array,
+   getStudent: PropTypes.func,
+   getTeacher: PropTypes.func
 }
 
 export default AddGrade

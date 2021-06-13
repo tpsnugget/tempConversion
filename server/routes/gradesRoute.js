@@ -4,6 +4,23 @@ const utils = require('../utils')
 const express = require('express'),
   router = express.Router()
 
+/* Route is /Grades/GetBoth/:student/:teacher */
+router.get('/GetBoth/:student/:teacher', async (req, res) => {
+  const { student, teacher } = req.params
+  console.log('/GetBoth student and teacher are ', student, ' and ', teacher)
+})
+
+/* Route is /Grades/GetStudent/:student */
+router.get('/GetStudent/:student', async (req, res) => {
+  const { student } = req.params
+  try {
+    const getStudent = await studentModel.findOne({"student": student})
+    res.status(200).json(getStudent)
+  } catch (error) {
+    res.status(200).json({"error": "There was an error on /GetStudent", error})
+  }
+})
+
 /* Route is /Grades */
 router.post('/', async (req, res) => {
 
@@ -60,7 +77,7 @@ router.post('/', async (req, res) => {
     /* Get teacher index from studentObj */
     const teacherIndex = utils.teacherIndex(req.body, studentObj)
     
-    anwerIs = utils.addGradeToObj(correctAnswer, req.body, studentObj, teacherIndex, legalStudentAnswer)
+    answerIs = utils.addGradeToObj(correctAnswer, req.body, studentObj, teacherIndex, legalStudentAnswer)
     answerIs = answerIs.answerIs
 
     try {

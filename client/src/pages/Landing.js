@@ -13,12 +13,24 @@ const Landing = () => {
 
    const [ allStudents, setAllStudents ] = useState([])
    const [ allTeachers, setAllTeachers ] = useState([])
+   const [ currentlySelectedStudent, setCurrentlySelectedStudent ] = useState('')
+   const [ currentlySelectedTeacher, setCurrentlySelectedTeacher ] = useState('')
    const [ student, setStudent ] = useState('')
    const [ teacher, setTeacher ] = useState('')
 
    const getPerson = (person) => {
       if(person.student !== undefined){ setStudent(person.student) }
       if(person.teacher !== undefined){ setTeacher(person.teacher) }
+   }
+
+   /* Send to AddGrade to get the currently selected student to send to Report */
+   const getStudent = (s) => {
+      setCurrentlySelectedStudent(s)
+   }
+
+   /* Send to AddGrade to get the currently selected teahcer to send to Report */
+   const getTeacher = (t) => {
+      setCurrentlySelectedTeacher(t)
    }
 
    /* Get all Students and Teachers on initial page load */
@@ -50,9 +62,9 @@ const Landing = () => {
 
             <AddPerson getPerson={getPerson}/>
 
-            <AddGrade allStudents={allStudents} allTeachers={allTeachers} />
+            <AddGrade allStudents={allStudents} allTeachers={allTeachers} getStudent={getStudent} getTeacher={getTeacher} />
 
-            <Report />
+            <Report student={currentlySelectedStudent} teacher={currentlySelectedTeacher} />
 
          </Container>
       </Box>
