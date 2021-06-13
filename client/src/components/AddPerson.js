@@ -21,6 +21,7 @@ const AddPerson = ({getPerson}) => {
       })
       setStudent('')
       setTeacher('')
+      setShowSubmitButton(false)
    }
 
    const handleStudentChange = (e) => {
@@ -47,9 +48,9 @@ const AddPerson = ({getPerson}) => {
          </Grid>
          <Grid item xs={1}>
             {showSubmitButton ?
-               <Button color='primary' variant='contained' onClick={handleSubmit} style={{height: '100%', marginLeft: '0.5rem'}} >Submit</Button>
+               <Button color='primary' variant='contained' onClick={handleSubmit} style={{height: '100%', marginLeft: '1rem'}} >Submit</Button>
                :
-               <Button color='primary' variant='contained' disabled style={{height: '100%', marginLeft: '0.5rem'}} >Submit</Button>
+               <Button color='primary' variant='contained' disabled style={{height: '100%', marginLeft: '1rem'}} >Submit</Button>
             }
          </Grid>
       </Grid>

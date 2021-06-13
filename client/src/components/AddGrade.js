@@ -13,6 +13,9 @@ import Typography from '@material-ui/core/Typography'
 
 const AddGrade = ({allStudents, allTeachers}) => {
 
+   const [ answerIs, setAnswerIs ] = useState('')
+   const [ answerUnit, setAnswerUnit ] = useState('')
+   const [ correctAnswer, setCorrectanswer ] = useState('')
    const [ showSubmitButton, setShowSubmitButton ] = useState(false)
    const [ student, setStudent ] = useState('')
    const [ studentAnswer, setStudentAnswer ] = useState('')
@@ -59,11 +62,14 @@ const AddGrade = ({allStudents, allTeachers}) => {
       axios.post(node_server + '/Grades', submission)
          .then( res => {
             console.log('AddGrade res.data is ', res.data)
+            setAnswerIs(res.data.answerIs)
+            setAnswerUnit(res.data.answerUnit)
+            setCorrectanswer(res.data.correctAnswer)
          } )
-      // setTempToConvert('')
-      // setUnitToConvertFrom('')
-      // setUnitToConvertTo('')
-      // setStudentAnswer('')
+      setTempToConvert('')
+      setUnitToConvertFrom('')
+      setUnitToConvertTo('')
+      setStudentAnswer('')
    }
 
    const handleTeacherSelect = (e) => {
@@ -158,12 +164,12 @@ const AddGrade = ({allStudents, allTeachers}) => {
          <Grid container style={{marginTop: '1.5rem'}}>
             <Grid container item xs={3} justify='flex-start'>
                <Typography variant='h6' >
-                  The correct value is: 29 C
+                  The correct value is: {correctAnswer} {answerUnit.toLocaleUpperCase()}
                </Typography>
             </Grid>
             <Grid container item xs={3} justify='flex-start' style={{marginLeft: '0.5rem'}}>
                <Typography variant='h6'>
-                  The answer is: Correct
+                  The answer is: {answerIs}
                </Typography>
             </Grid>
          </Grid>

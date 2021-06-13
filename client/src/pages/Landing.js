@@ -27,7 +27,6 @@ const Landing = () => {
          .then( res => {
             setAllStudents(res.data.students)
             setAllTeachers(res.data.teachers)
-            console.log('Landing all persons on initial page load are ', res.data)
          })
    }, [] )
 
@@ -38,7 +37,6 @@ const Landing = () => {
          .then( res => {
             setAllStudents(res.data.students)
             setAllTeachers(res.data.teachers)
-            console.log('Landing all persons on person add are ', res.data)
          })
       }
    }, [student, teacher] )
