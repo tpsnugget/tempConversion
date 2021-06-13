@@ -7,17 +7,36 @@ const express = require('express'),
 /* Route is /Grades/GetBoth/:student/:teacher */
 router.get('/GetBoth/:student/:teacher', async (req, res) => {
   const { student, teacher } = req.params
-  console.log('/GetBoth student and teacher are ', student, ' and ', teacher)
+  try {
+    let getStudent = await studentModel.findOne({"student": student})
+    if(getStudent !== null){
+      getStudent = getStudent.grades.filter( s => s.teacher === teacher )
+      if(getStudent.length > 0){
+        getStudent = getStudent[0].grade
+      }
+      else{
+        getStudent = null
+      }
+    }
+    res.status(200).json({getStudent})
+  } catch (error) {
+    res.status(200).json({"err": "There was an error on /GetStudent", error})
+  }
 })
 
 /* Route is /Grades/GetStudent/:student */
 router.get('/GetStudent/:student', async (req, res) => {
   const { student } = req.params
   try {
-    const getStudent = await studentModel.findOne({"student": student})
-    res.status(200).json(getStudent)
+    let getStudent = await studentModel.findOne({"student": student})
+    if(getStudent !== null){
+      getStudent = getStudent.grades
+      getStudent = getStudent.map( g => g.grade )
+      getStudent = getStudent.flat()
+    }
+    res.status(200).json({getStudent})
   } catch (error) {
-    res.status(200).json({"error": "There was an error on /GetStudent", error})
+    res.status(200).json({"err": "There was an error on /GetStudent", error})
   }
 })
 

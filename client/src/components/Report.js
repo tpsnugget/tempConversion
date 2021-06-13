@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import Button from '@material-ui/core/Button'
 import GradeReport from './GradeReport'
@@ -9,55 +9,51 @@ import Typography from '@material-ui/core/Typography'
 
 const Report = ({student, teacher}) => {
 
-   const [ data, setData ] = useState({})
    const [ grades, setGrades ] = useState([])
    const [ showFeedback, setShowFeedback ] = useState(false)
    const [ showReport, setShowReport ] = useState(false)
 
    const handleGetBoth = () => {
       axios.get(node_server + `/Grades/GetBoth/${student}/${teacher}`)
-         .then( res => {
-            console.log('Report /Grades/GetBoth res.data is ', res.data)
-         } )
-   }
-
-   const handleGetStudent = () => {
-      axios.get(node_server + `/Grades/GetStudent/${student}`)
-         .then( res => {
-            /* If the selected student has no grades this keeps the useEffect from attempting
-               to access data.grades and data.student when data variable is null */
-            if(res.data === null){
-               setData({"data.grades": null, "data.student": null})
+      .then( res => {
+            /* IF {getGrades: Array(9)} was returned */
+            if(res.data.getStudent !== null){
+               setGrades(res.data.getStudent)
+               setShowReport(true)
+            }
+            /* IF {getGrades: null} was returned */
+            else{
                setShowReport(false)
                setShowFeedback(true)
                setTimeout(() => {
                   setShowFeedback(false)
                }, 2500);
             }
-            else{
-               setData(res.data)
-            }
-            return res.data
-         } )
-         .then( d => {
-            if(d !== null){
-               setShowReport(true)
-            }
-            return null
          } )
    }
+
+   const handleGetStudent = () => {
+      axios.get(node_server + `/Grades/GetStudent/${student}`)
+         .then( res => {
+            /* IF {getGrades: Array(9)} was returned */
+            if(res.data.getStudent !== null){
+               setGrades(res.data.getStudent)
+               setShowReport(true)
+            }
+            /* IF {getGrades: null} was returned */
+            else{
+               setShowReport(false)
+               setShowFeedback(true)
+               setTimeout(() => {
+                  setShowFeedback(false)
+               }, 2500);
+            }
+         } )
+   }
+
    const handleGetTeacher = () => {
 
    }
-
-   useEffect( () => {
-      if(data.student !== undefined){
-         let gradesForReport = data.grades
-         gradesForReport = gradesForReport.map( g => g.grade )
-         gradesForReport = gradesForReport.flat()
-         setGrades(gradesForReport)
-      }
-   }, [data.grades, data.student] )
 
    return (
       <Grid container>
