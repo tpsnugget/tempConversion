@@ -40,6 +40,35 @@ router.get('/GetStudent/:student', async (req, res) => {
   }
 })
 
+/* Route is /Grades/GetTeacher/:teacher */
+router.get('/GetTeacher/:teacher', async (req, res) => {
+  const { teacher } = req.params
+  try {
+    let getStudent = await studentModel.find({})
+    if(getStudent !== null){
+      /* This takes all of the documents returned from the DB and generates an
+         array that contains all of the grades arrays from each document */
+      getStudent = getStudent.map( s => s.grades )
+      /* This takes the array with arrays inside it and generates an array of
+         individual objects */
+      getStudent = getStudent.flat()
+      /* This filters out any teacher who is not the selected teacher and
+         is an array of objects */
+      getStudent = getStudent.filter( s => s.teacher === teacher )
+      /* This generates an array of grade arrays */
+      getStudent = getStudent.map( s => s.grade )
+      /* This generates an array of grade objects */
+      getStudent = getStudent.flat()
+    }
+    if(getStudent.length === 0){
+      getStudent = null
+    }
+    res.status(200).json({getStudent})
+  } catch (error) {
+    res.status(200).json({"err": "There was an error on /GetStudent", error})
+  }
+})
+
 /* Route is /Grades */
 router.post('/', async (req, res) => {
 

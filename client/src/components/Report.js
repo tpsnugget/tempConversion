@@ -13,46 +13,42 @@ const Report = ({student, teacher}) => {
    const [ showFeedback, setShowFeedback ] = useState(false)
    const [ showReport, setShowReport ] = useState(false)
 
+   /* Called once by each handleGet function that calls the DB */
+   const handleData = (res) => {
+      /* IF {getGrades: Array(9)} was returned */
+      if(res.data.getStudent !== null){
+         setGrades(res.data.getStudent)
+         setShowReport(true)
+      }
+      /* IF {getGrades: null} was returned */
+      else{
+         setShowReport(false)
+         setShowFeedback(true)
+         setTimeout(() => {
+            setShowFeedback(false)
+         }, 2500);
+      }
+   }
+
    const handleGetBoth = () => {
       axios.get(node_server + `/Grades/GetBoth/${student}/${teacher}`)
       .then( res => {
-            /* IF {getGrades: Array(9)} was returned */
-            if(res.data.getStudent !== null){
-               setGrades(res.data.getStudent)
-               setShowReport(true)
-            }
-            /* IF {getGrades: null} was returned */
-            else{
-               setShowReport(false)
-               setShowFeedback(true)
-               setTimeout(() => {
-                  setShowFeedback(false)
-               }, 2500);
-            }
+         handleData(res)
          } )
    }
 
    const handleGetStudent = () => {
       axios.get(node_server + `/Grades/GetStudent/${student}`)
          .then( res => {
-            /* IF {getGrades: Array(9)} was returned */
-            if(res.data.getStudent !== null){
-               setGrades(res.data.getStudent)
-               setShowReport(true)
-            }
-            /* IF {getGrades: null} was returned */
-            else{
-               setShowReport(false)
-               setShowFeedback(true)
-               setTimeout(() => {
-                  setShowFeedback(false)
-               }, 2500);
-            }
+            handleData(res)
          } )
    }
 
    const handleGetTeacher = () => {
-
+      axios.get(node_server + `/Grades/GetTeacher/${teacher}`)
+         .then( res => {
+            handleData(res)
+         } )
    }
 
    return (
